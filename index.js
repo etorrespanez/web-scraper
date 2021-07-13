@@ -8,18 +8,17 @@ import puppeteer from 'puppeteer';
   await page.goto('https://news.ycombinator.com/');
   await page.screenshot({ path: 'screenshoot1.jpg'});
 
-  const titulos = await page.evaluate(() => {
-    const elements = document.querySelectorAll('tr.athing a');
-    const titles = [];
 
-    for(let element of elements) {
-      titles.push(element);
-    }
-    return titles;
+  const entries = await page.evaluate(() => {
+    let items = [];
+    const elements = Array.from(document.querySelectorAll('tr.athing td.title a.storylink')).map((comment) => {
+      return  { title: comment.innerText.trim() };
+    });
+    
 
+
+    return items;
   });
 
-
-  console.log(titulos.length);
   await browser.close();
 })();
