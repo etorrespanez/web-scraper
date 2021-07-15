@@ -11,9 +11,19 @@ import puppeteer from 'puppeteer';
 
 
   const entries = await page.evaluate(() => {
-    let item = {};
     const pattern = 'points';
-  
+    
+    //Simplifies coding by eliminating duplicate code when selecting selectors
+
+    /* const items = Array.from(document.querySelectorAll('.itemlist tbody'))
+      .map( (compact, index) => ({
+        rank: ++index,
+        title: compact.querySelector('tr.athing td.title a.storylink').innerText.trim(),
+        score: compact.querySelector('tr td.subtext span.score').innerText.trim(),
+        comments: compact.querySelector('tr td.subtext a').innerText.trim()
+      })); */
+
+
     const mainInfo = Array.from(document.querySelectorAll('tr.athing td.title a.storylink')).map((comment) => comment.innerText.trim());
     const additionalInfo = Array.from(document.querySelectorAll('td.subtext')).map((comment, index) => {
 
@@ -24,7 +34,7 @@ import puppeteer from 'puppeteer';
         comments: comment.innerText.trim().split('|').length === 3 ?  comment.innerText.trim().split('|')[2] : 'no comments'
       }
     });
-    //return items;
+
     return additionalInfo;
   });
 
