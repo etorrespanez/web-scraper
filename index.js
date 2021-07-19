@@ -1,10 +1,11 @@
+//import { xml } from 'cheerio/lib/static';
 import puppeteer from 'puppeteer';
 
 (async () => {
   
-  const browser = await puppeteer.launch({headless: false}); // Open browser  
-  const url = 'https://news.ycombinator.com/';              // Set url
-  const page = await browser.newPage();                    // Create new page to work with
+  const browser = await puppeteer.launch({headless: true});  // Open browser  
+  const url = 'https://news.ycombinator.com/';                // Set url
+  const page = await browser.newPage();                       // Create new page to work with
 
   await page.goto(url);
   await page.screenshot({ path: 'screenshoot1.jpg'});
@@ -13,7 +14,7 @@ import puppeteer from 'puppeteer';
   const entries = await page.evaluate(() => {
     const pattern = 'points';
 
-    //Simplifies coding by eliminating duplicate code when selecting selectors
+    //Simplifies coding by eliminating duplicate code selecting selectors
 
     /* const items = Array.from(document.querySelectorAll('.itemlist tbody'))
       .map( (compact, index) => ({
@@ -35,12 +36,15 @@ import puppeteer from 'puppeteer';
       }
     });
 
-    let filterdItems = items.filter(item => (item.title || '').split(' ').length > 5);
-    const sortedItems = items.sort(function(a , b) {
-      return b.score - a.score;
-   });
+    let filterdItems = items.filter(item => (item.title || '').split(' ').length > 5);    // Check path to iterate
 
-    return filterdItems;
+    const sortArr = (arr, key) => {
+      return arr.sort((a, b) => {
+          return b[key] - a[key]
+      })
+    }
+
+    return sortArr(filterdItems,'comments');
   });
 
   console.log(entries);
